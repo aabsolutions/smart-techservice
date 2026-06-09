@@ -1,0 +1,222 @@
+{
+  "routes": [
+    {
+      "path": "",
+      "title": "SUPERADMIN",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/superadmin/dashboard",
+      "title": "Dashboard",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/superadmin/users",
+      "title": "Users Management",
+      "iconType": "material-icons-outlined",
+      "icon": "group",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/superadmin/roles",
+      "title": "Roles Management",
+      "iconType": "material-icons-outlined",
+      "icon": "admin_panel_settings",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/superadmin/audit-log",
+      "title": "Audit Logs",
+      "iconType": "material-icons-outlined",
+      "icon": "history",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "ADMIN",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/dashboard/main",
+      "title": "Dashboard",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "TECHNICIAN",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TECHNICIAN"],
+      "submenu": []
+    },
+    {
+      "path": "/technician/dashboard",
+      "title": "Dashboard",
+      "iconType": "material-icons-outlined",
+      "icon": "build",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TECHNICIAN"],
+      "submenu": []
+    },
+    {
+      "path": "/technician/board",
+      "title": "Kanban Board",
+      "iconType": "material-icons-outlined",
+      "icon": "view_kanban",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["TECHNICIAN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "RECEPTIONIST",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["RECEPTIONIST"],
+      "submenu": []
+    },
+    {
+      "path": "/receptionist/dashboard",
+      "title": "Dashboard",
+      "iconType": "material-icons-outlined",
+      "icon": "space_dashboard",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["RECEPTIONIST"],
+      "submenu": []
+    },
+
+    {
+      "path": "/receptionist/clients",
+      "title": "Clients",
+      "iconType": "material-icons-outlined",
+      "icon": "people",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["RECEPTIONIST", "ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "",
+      "title": "Tickets",
+      "iconType": "material-icons-outlined",
+      "icon": "receipt_long",
+      "class": "menu-toggle",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["RECEPTIONIST", "ADMIN", "SUPERADMIN"],
+      "submenu": [
+        {
+          "path": "/receptionist/tickets",
+          "title": "All Tickets",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["RECEPTIONIST", "ADMIN", "SUPERADMIN"],
+          "submenu": []
+        },
+        {
+          "path": "/receptionist/tickets/create",
+          "title": "New Ticket",
+          "iconType": "",
+          "icon": "",
+          "class": "ml-menu",
+          "groupTitle": false,
+          "badge": "",
+          "badgeClass": "",
+          "role": ["RECEPTIONIST", "ADMIN", "SUPERADMIN"],
+          "submenu": []
+        }
+      ]
+    },
+    {
+      "path": "",
+      "title": "CLIENT",
+      "iconType": "",
+      "icon": "",
+      "class": "",
+      "groupTitle": true,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["CLIENT"],
+      "submenu": []
+    },
+    {
+      "path": "/client-portal/dashboard",
+      "title": "Client Portal",
+      "iconType": "material-icons-outlined",
+      "icon": "person",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["CLIENT"],
+      "submenu": []
+    }
+  ]
+}

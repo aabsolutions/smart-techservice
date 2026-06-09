@@ -1,0 +1,190 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Nueva Orden de Servicio'" [items]="['Tickets']" [active_item]="'Crear'"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="header">
+            <h2>Información General de la Orden</h2>
+          </div>
+          <div class="body">
+            <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+              
+              <div class="row">
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Cliente</mat-label>
+                    <mat-select formControlName="clientId">
+                      <mat-option *ngFor="let client of clients" [value]="client._id">
+                        {{ client.fullName }} ({{ client.cedula }})
+                      </mat-option>
+                    </mat-select>
+                    <button mat-icon-button matSuffix (click)="$event.stopPropagation(); openClientDialog()" color="primary" matTooltip="Nuevo Cliente">
+                      <mat-icon>person_add</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>Técnico Asignado</mat-label>
+                    <mat-select formControlName="assignedTechnicianId">
+                      <mat-option [value]="null">Sin asignar</mat-option>
+                      <mat-option *ngFor="let tech of technicians" [value]="tech._id">
+                        {{ tech.fullName }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                  <mat-form-field class="example-full-width" appearance="outline">
+                    <mat-label>No. Orden Física</mat-label>
+                    <input matInput formControlName="physicalOrder" placeholder="Ej. 000123">
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div formArrayName="devices">
+                <div *ngFor="let device of devices.controls; let i = index" [formGroupName]="i" class="card shadow-none border mb-4">
+                  <div class="header flex justify-between items-center bg-light">
+                    <h2 class="m-0">Equipo #{{ i + 1 }}</h2>
+                    <button *ngIf="devices.length > 1" type="button" mat-icon-button color="warn" (click)="removeDevice(i)" matTooltip="Quitar equipo">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                  <div class="body">
+                    <div class="row">
+                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Marca</mat-label>
+                          <mat-select formControlName="brand">
+                            <mat-option *ngFor="let b of brands" [value]="b.name">{{ b.name }}</mat-option>
+                          </mat-select>
+                          <button mat-icon-button matSuffix (click)="$event.stopPropagation(); addCatalog('BRAND')" color="accent">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Tipo de Equipo</mat-label>
+                          <mat-select formControlName="equipmentType">
+                            <mat-option *ngFor="let eq of equipmentTypes" [value]="eq.name">{{ eq.name }}</mat-option>
+                          </mat-select>
+                          <button mat-icon-button matSuffix (click)="$event.stopPropagation(); addCatalog('EQUIPMENT_TYPE')" color="accent">
+                            <mat-icon>add</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Modelo</mat-label>
+                          <input matInput formControlName="model">
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Número de Serie</mat-label>
+                          <input matInput formControlName="serialNumber">
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Descripción del Daño</mat-label>
+                          <textarea matInput formControlName="issueDescription" rows="2"></textarea>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Accesorios Entregados</mat-label>
+                          <textarea matInput formControlName="accessories" rows="2" placeholder="Ej. Cargador, funda..."></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Tipo de Servicio</mat-label>
+                          <mat-select formControlName="serviceType">
+                            <mat-option *ngFor="let st of serviceTypes" [value]="st">{{ st }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Tipo de Reparación</mat-label>
+                          <mat-select formControlName="repairType">
+                            <mat-option *ngFor="let rt of repairTypes" [value]="rt">{{ rt }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3">
+                        <mat-form-field class="example-full-width" appearance="outline">
+                          <mat-label>Observaciones</mat-label>
+                          <input matInput formControlName="observations">
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col-12 text-center">
+                  <button type="button" mat-stroked-button color="primary" (click)="addDevice()">
+                    <mat-icon>add_circle_outline</mat-icon> Agregar otro equipo
+                  </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12">
+                  <div class="card shadow-none border">
+                    <div class="header">
+                      <h2><mat-icon class="align-middle">camera_alt</mat-icon> Fotografías / Anexos</h2>
+                    </div>
+                    <div class="body">
+                      <p class="text-muted mb-3">Carga imágenes del equipo o escanea el QR para subirlas desde tu móvil de forma remota.</p>
+                      <div class="d-flex gap-2">
+                        <button type="button" mat-raised-button color="primary">
+                          <mat-icon>upload_file</mat-icon> Cargar desde PC
+                        </button>
+                        <button type="button" mat-stroked-button color="accent">
+                          <mat-icon>qr_code</mat-icon> Escanear QR
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-12 text-end">
+                  <button mat-button type="button" routerLink="/receptionist/tickets" class="me-2">Cancelar</button>
+                  <button mat-raised-button color="primary" type="submit" [disabled]="ticketForm.invalid">
+                    <mat-icon>save</mat-icon> Guardar Orden
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

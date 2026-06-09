@@ -1,0 +1,51 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Tablero Kanban'" [items]="['Técnico']" [active_item]="'Órdenes'"></app-breadcrumb>
+    </div>
+    
+    <div class="kanban-board" cdkDropListGroup>
+      <div class="kanban-column" *ngFor="let column of columns">
+        <div class="kanban-column-header bg-primary text-white p-3 rounded-top d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-bold text-uppercase" style="font-size: 13px; letter-spacing: 0.5px;">{{ column.title }}</h6>
+          <span class="badge bg-light text-dark">{{ column.tickets.length }}</span>
+        </div>
+        
+        <div 
+          class="kanban-list p-2 bg-light rounded-bottom min-h-screen"
+          cdkDropList
+          [cdkDropListData]="column.tickets"
+          (cdkDropListDropped)="drop($event, column.id)">
+          
+          <mat-card *ngFor="let ticket of column.tickets" cdkDrag class="kanban-card mb-3 cursor-move hover:shadow-lg transition-all">
+            <mat-card-header>
+              <div mat-card-avatar class="bg-info text-white rounded-circle flex items-center justify-center p-2">
+                <mat-icon>build</mat-icon>
+              </div>
+              <mat-card-title class="text-sm">#{{ getShortId(ticket._id) }}</mat-card-title>
+              <mat-card-subtitle>{{ ticket.client?.fullName }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="mt-2">
+              <p class="text-muted m-0 text-sm">
+                <strong>Equipo:</strong> {{ ticket.devices?.[0]?.brand }} {{ ticket.devices?.[0]?.equipmentType }}
+              </p>
+              <p class="text-muted m-0 text-sm">
+                <strong>Falla:</strong> {{ ticket.devices?.[0]?.issueDescription }}
+              </p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-icon-button color="primary" title="Ver y Agregar Detalle" (click)="openDetail(ticket)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+
+          <!-- Drop area placeholder -->
+          <div *ngIf="column.tickets.length === 0" class="p-4 text-center text-muted border-dashed border-2 border-gray-300 rounded m-2">
+            Arrastra aquí
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,122 @@
+<h2 mat-dialog-title class="d-flex align-items-center gap-2" tabindex="-1" cdkFocusInitial style="outline: none;">
+  <mat-icon>assignment</mat-icon> Detalle de Orden: #{{ data.ticket._id.toString().slice(-6) | uppercase }}
+</h2>
+
+<mat-dialog-content>
+  <!-- Información del Equipo -->
+  <div class="mb-4">
+    <h4 class="text-primary mb-2">Información del Equipo</h4>
+    <div class="p-3 bg-light rounded">
+      <p class="mb-1"><strong>Cliente:</strong> {{ data.ticket.client?.fullName }}</p>
+      <p class="mb-1"><strong>Equipo:</strong> {{ data.ticket.devices?.[0]?.brand }} {{ data.ticket.devices?.[0]?.equipmentType }}</p>
+      <p class="mb-1"><strong>Modelo / S/N:</strong> {{ data.ticket.devices?.[0]?.model || 'N/A' }} / {{ data.ticket.devices?.[0]?.serialNumber || 'N/A' }}</p>
+      <p class="mb-1"><strong>Falla Reportada:</strong> {{ data.ticket.devices?.[0]?.issueDescription }}</p>
+      <p class="mb-0"><strong>Accesorios:</strong> {{ data.ticket.devices?.[0]?.accessories || 'Ninguno' }}</p>
+    </div>
+  </div>
+
+  <!-- Reasignación de Técnico (Recepcionista / Admin) -->
+  <div *ngIf="canAssignTechnician()" class="mb-4">
+    <h4 class="text-primary mb-2">Técnico Asignado</h4>
+    <div class="p-3 bg-light rounded d-flex align-items-center gap-3">
+      <mat-form-field appearance="outline" class="flex-grow-1" style="margin-bottom: 0 !important;">
+        <mat-label>Técnico</mat-label>
+        <mat-select [(ngModel)]="selectedTechnicianId">
+          <mat-option [value]="null">Sin asignar</mat-option>
+          <mat-option *ngFor="let tech of technicians" [value]="tech._id">
+            {{ tech.fullName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="button" (click)="assignTechnician()"
+        style="height: 40px; white-space: nowrap;">
+        <mat-icon>person_pin</mat-icon> Asignar
+      </button>
+    </div>
+  </div>
+
+  <!-- Historial -->
+  <div class="mb-4">
+    <h4 class="text-primary mb-2">Historial de Notas y Estados</h4>
+    <div class="timeline-container" style="max-height: 220px; overflow-y: auto;">
+      <div *ngIf="!data.ticket.statusHistory?.length" class="text-muted small">No hay historial registrado.</div>
+
+      <div *ngFor="let history of data.ticket.statusHistory; let i = index" class="mb-2 p-2 border-start border-3 border-primary bg-light">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <span class="badge bg-info text-dark">{{ history.status }}</span>
+            <small class="text-muted ms-2">{{ history.createdAt | date:'short' }}</small>
+          </div>
+          <button *ngIf="canDeleteNote(history, i)" mat-icon-button color="warn"
+            style="width: 24px; height: 24px; line-height: 24px; padding: 0;"
+            (click)="deleteNote(history, i)" title="Eliminar nota">
+            <mat-icon style="font-size: 16px;">delete</mat-icon>
+          </button>
+        </div>
+        <p class="mb-0 mt-1 small" *ngIf="history.notes">{{ history.notes }}</p>
+
+        <!-- Galería de evidencias almacenadas (URLs de Cloudinary) -->
+        <div *ngIf="history.photos?.length" class="mt-2 d-flex gap-2 flex-wrap">
+          <a *ngFor="let photo of history.photos" [href]="photo" target="_blank" rel="noopener">
+            <img [src]="photo" class="img-thumbnail" style="max-height: 80px; object-fit: contain; cursor: zoom-in;" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de nueva nota / evidencia de entrega -->
+  <div *ngIf="canSeeEvidenceSection()" class="mt-3 bg-light p-3 rounded">
+    <h6 class="text-primary mb-2">
+      {{ canOnlyDeliver() ? 'Evidencia de Entrega' : 'Registrar Avance / Novedad' }}
+    </h6>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Descripción de lo realizado</mat-label>
+      <textarea matInput [(ngModel)]="noteText" rows="2" placeholder="Ej: Se revisó la placa base..."></textarea>
+    </mat-form-field>
+
+    <div class="d-flex justify-content-between align-items-center mt-1">
+      <div>
+        <button mat-stroked-button color="accent" type="button" (click)="fileInput.click()" [disabled]="isUploading">
+          <mat-icon>add_a_photo</mat-icon> Adjuntar Evidencia
+        </button>
+        <input type="file" #fileInput hidden multiple accept="image/*" (change)="onFileSelected($event)">
+        <small *ngIf="pendingFiles.length > 0" class="ms-2 text-muted">{{ pendingFiles.length }} foto(s) lista(s)</small>
+      </div>
+
+      <!-- Spinner while uploading -->
+      <div *ngIf="isUploading" class="d-flex align-items-center gap-2 text-muted small">
+        <mat-spinner diameter="20"></mat-spinner> Subiendo...
+      </div>
+
+      <button *ngIf="canAddNote()" mat-raised-button color="primary"
+        (click)="addNote()"
+        [disabled]="(!noteText.trim() && pendingFiles.length === 0) || isUploading">
+        <mat-icon>save</mat-icon> Guardar Registro
+      </button>
+    </div>
+
+    <!-- Preview de fotos pendientes -->
+    <div *ngIf="photoPreviews.length > 0" class="mt-3 d-flex gap-2 flex-wrap p-2 border rounded" style="border-style: dashed !important;">
+      <div *ngFor="let preview of photoPreviews; let i = index" class="position-relative">
+        <img [src]="preview" class="img-thumbnail" style="max-height: 70px; object-fit: contain;" />
+        <button mat-icon-button color="warn" class="position-absolute top-0 end-0 bg-white shadow-sm"
+          style="transform: translate(30%, -30%); width: 22px; height: 22px; line-height: 22px; padding: 0;"
+          (click)="removePhoto(i)" [disabled]="isUploading">
+          <mat-icon style="font-size: 14px;">close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="d-flex justify-content-between w-100 px-4">
+  <div>
+    <button *ngIf="canDeliverTicket()" mat-raised-button color="accent" (click)="deliverTicket()" [disabled]="isUploading">
+      <mat-icon>check_circle</mat-icon> Entregar Equipo al Cliente
+    </button>
+  </div>
+  <button mat-button mat-dialog-close [disabled]="isUploading">Cerrar</button>
+</mat-dialog-actions>

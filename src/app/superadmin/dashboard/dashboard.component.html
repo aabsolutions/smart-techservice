@@ -1,0 +1,40 @@
+<section class="content">
+  <div class="content-block">
+    <app-breadcrumb [title]="'Dashboard'" [items]="['SuperAdmin']" [active_item]="'Dashboard'"></app-breadcrumb>
+    <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>group</mat-icon>
+            <mat-card-title>Total Users</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ usersCount() }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>admin_panel_settings</mat-icon>
+            <mat-card-title>SuperAdmins</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ superadminCount() }} / 3</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <mat-card>
+          <mat-card-header>
+            <mat-icon mat-card-avatar>dns</mat-icon>
+            <mat-card-title>System Status</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <h2>{{ systemStatus() }}</h2>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</section>

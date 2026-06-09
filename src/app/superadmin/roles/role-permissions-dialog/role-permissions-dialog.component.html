@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>Gestionar Permisos: {{ data.role.name }}</h2>
+<mat-dialog-content>
+  <p class="text-muted mb-4">Selecciona los permisos a los que este rol tendrá acceso.</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let perm of allPermissions">
+      <mat-checkbox 
+        [checked]="hasPermission(perm.name)"
+        (change)="togglePermission(perm.name, $event.checked)">
+        <div class="d-flex flex-column">
+          <strong>{{ perm.name }}</strong>
+          <small class="text-muted">{{ perm.description }}</small>
+        </div>
+      </mat-checkbox>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="save()">Guardar Cambios</button>
+</mat-dialog-actions>
