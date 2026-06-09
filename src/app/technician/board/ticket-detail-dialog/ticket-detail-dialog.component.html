@@ -37,29 +37,36 @@
 
   <!-- Historial -->
   <div class="mb-4">
-    <h4 class="text-primary mb-2">Historial de Notas y Estados</h4>
-    <div class="timeline-container" style="max-height: 220px; overflow-y: auto;">
-      <div *ngIf="!data.ticket.statusHistory?.length" class="text-muted small">No hay historial registrado.</div>
+    <h4 class="history-title">Historial del Servicio</h4>
+    <div class="timeline-premium">
+      <div *ngIf="!data.ticket.statusHistory?.length" class="text-muted small p-4 text-center border rounded" style="border-style: dashed !important; background: #f8fafc;">
+        <mat-icon class="text-slate-400 mb-2 d-block mx-auto" style="font-size: 32px; height: 32px; width: 32px;">history_toggle_off</mat-icon>
+        No hay historial registrado todavía.
+      </div>
 
-      <div *ngFor="let history of data.ticket.statusHistory; let i = index" class="mb-2 p-2 border-start border-3 border-primary bg-light">
-        <div class="d-flex justify-content-between align-items-start">
-          <div>
-            <span class="badge bg-info text-dark">{{ history.status }}</span>
-            <small class="text-muted ms-2">{{ history.createdAt | date:'short' }}</small>
+      <div *ngFor="let history of data.ticket.statusHistory; let i = index" class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content">
+          <div class="timeline-header">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+              <span class="status-badge">{{ history.status }}</span>
+              <span class="timeline-date">{{ history.createdAt | date:'d MMM, y, h:mm a' }}</span>
+            </div>
+            <button *ngIf="canDeleteNote(history, i)" mat-icon-button color="warn"
+              style="width: 28px; height: 28px; line-height: 28px; padding: 0; background: #fee2e2; border-radius: 6px;"
+              (click)="deleteNote(history, i)" matTooltip="Eliminar registro">
+              <mat-icon style="font-size: 16px; color: #ef4444;">delete_outline</mat-icon>
+            </button>
           </div>
-          <button *ngIf="canDeleteNote(history, i)" mat-icon-button color="warn"
-            style="width: 24px; height: 24px; line-height: 24px; padding: 0;"
-            (click)="deleteNote(history, i)" title="Eliminar nota">
-            <mat-icon style="font-size: 16px;">delete</mat-icon>
-          </button>
-        </div>
-        <p class="mb-0 mt-1 small" *ngIf="history.notes">{{ history.notes }}</p>
+          
+          <p class="timeline-notes" *ngIf="history.notes">{{ history.notes }}</p>
 
-        <!-- Galería de evidencias almacenadas (URLs de Cloudinary) -->
-        <div *ngIf="history.photos?.length" class="mt-2 d-flex gap-2 flex-wrap">
-          <a *ngFor="let photo of history.photos" [href]="photo" target="_blank" rel="noopener">
-            <img [src]="photo" class="img-thumbnail" style="max-height: 80px; object-fit: contain; cursor: zoom-in;" />
-          </a>
+          <!-- Galería de evidencias -->
+          <div *ngIf="history.photos?.length" class="timeline-gallery">
+            <a *ngFor="let photo of history.photos" [href]="photo" target="_blank" rel="noopener" class="gallery-item">
+              <img [src]="photo" alt="Evidencia de servicio" />
+            </a>
+          </div>
         </div>
       </div>
     </div>
