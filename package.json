@@ -77,6 +77,7 @@
     "@types/jasmine": "~5.1.9",
     "@typescript-eslint/eslint-plugin": "^8.40.0",
     "@typescript-eslint/parser": "^8.40.0",
+    "angular-cli-ghpages": "^3.1.0",
     "browser-sync": "^3.0.4",
     "eslint": "^9.34.0",
     "jasmine-core": "~5.9.0",

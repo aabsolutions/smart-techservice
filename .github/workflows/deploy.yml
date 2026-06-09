@@ -1,0 +1,46 @@
+name: Deploy Angular App to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "master"] # Se ejecutará al hacer push a main o master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Angular Project
+        # Obtiene automáticamente el nombre del repositorio para el base-href
+        run: npx ng build --base-href=/${{ github.event.repository.name }}/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Ruta donde Angular compila los archivos (depende de tu angular.json)
+          path: './dist/smart/browser'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
