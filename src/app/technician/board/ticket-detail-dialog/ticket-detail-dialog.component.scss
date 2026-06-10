@@ -1,11 +1,15 @@
-/* Premium Modern Timeline Design */
+/* Premium Modern Timeline Design (Flexbox Based) */
 .timeline-premium {
-  position: relative;
-  padding: 10px 0 10px 24px;
+  padding: 10px 0;
   max-height: 400px;
   overflow-y: auto;
+  overflow-x: hidden;
   
-  /* Custom elegant scrollbar */
+  /* Firefox Scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  
+  /* Webkit Scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -17,144 +21,138 @@
     border-radius: 10px;
   }
   
-  /* The continuous connecting line */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 7px;
-    width: 2px;
-    background: linear-gradient(to bottom, #e2e8f0 0%, #cbd5e1 50%, #e2e8f0 100%);
-    z-index: 1;
-  }
-  
   .timeline-item {
-    position: relative;
-    margin-bottom: 24px;
-    padding-left: 16px;
     opacity: 0;
     animation: slideIn 0.4s ease-out forwards;
     
-    /* Staggered animation based on DOM order */
+    /* Staggered animation */
     @for $i from 1 through 20 {
       &:nth-child(#{$i}) {
         animation-delay: #{$i * 0.08}s;
       }
     }
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    /* The glowing dot */
+  }
+
+  .timeline-indicator {
     .timeline-dot {
-      position: absolute;
-      left: -22px;
-      top: 4px;
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background-color: #ffffff;
-      border: 3px solid #3b82f6;
-      z-index: 2;
+      border: 4px solid #3b82f6;
       box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      z-index: 2;
     }
-    
-    &:hover .timeline-dot {
-      transform: scale(1.3);
-      box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
-      border-color: #2563eb;
-    }
-    
-    /* Content card */
-    .timeline-content {
-      background: #ffffff;
-      border: 1px solid #f1f5f9;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    .timeline-line {
+      width: 100%;
+      padding-top: 4px;
       
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-    }
-    
-    .timeline-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px;
-      
-      .status-badge {
-        display: inline-block;
-        padding: 4px 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        border-radius: 20px;
-        background: #eff6ff;
-        color: #1d4ed8;
-      }
-      
-      .timeline-date {
-        font-size: 0.75rem;
-        color: #64748b;
-        font-weight: 500;
-      }
-    }
-    
-    .timeline-notes {
-      color: #334155;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      margin: 0;
-    }
-    
-    .timeline-gallery {
-      margin-top: 12px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      
-      .gallery-item {
-        overflow: hidden;
-        border-radius: 8px;
-        border: 1px solid #e2e8f0;
-        transition: opacity 0.2s ease;
-        
-        &:hover {
-          opacity: 0.85;
-        }
-        
-        img {
-          height: 60px;
-          width: auto;
-          object-fit: cover;
-          display: block;
-        }
+      .line-segment {
+        width: 3px;
+        height: 100%;
+        background-color: #cbd5e1; /* Visible, elegant gray */
+        border-radius: 4px;
       }
     }
   }
+
+  .timeline-item:hover .timeline-dot {
+    transform: scale(1.3);
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.2);
+  }
+  
+  /* Content card */
+  .timeline-content {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-radius: 20px;
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+    
+    .timeline-date {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+  }
+  
+  .timeline-notes {
+    color: #334155;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  /* Fix image overflow */
+  .timeline-gallery {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    
+    .gallery-item {
+      display: block; /* Obliga a que respete las medidas de la caja */
+      width: 70px; /* Tamaño estricto */
+      height: 70px; /* Tamaño estricto */
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      transition: opacity 0.2s ease;
+      flex-shrink: 0; /* Evita que flexbox colapse la caja */
+      
+      &:hover {
+        opacity: 0.85;
+      }
+      
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+  }
+}
+
+@-moz-keyframes slideIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .history-title {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 1.25rem;
   font-weight: 700;
   color: #0f172a;

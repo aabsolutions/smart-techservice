@@ -31,6 +31,7 @@ export class TicketDetailDialogComponent implements OnInit {
 
   noteText: string = '';
   currentUser: any;
+  isReceptionistView: boolean = false;
 
   // Technician reassignment (receptionist)
   technicians: any[] = [];
@@ -50,6 +51,7 @@ export class TicketDetailDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { ticket: any }
   ) {
     this.currentUser = this.authService.currentUser();
+    this.isReceptionistView = this.authService.hasRole('RECEPTIONIST');
   }
 
   ngOnInit() {
@@ -186,6 +188,35 @@ export class TicketDetailDialogComponent implements OnInit {
   }
 
   // ─── Deliver ticket ───────────────────────────────────────────────────────────
+
+  isSystemNote(notes: string | undefined): boolean {
+    if (!notes) return false;
+    return notes.startsWith('Cambio de estado') || notes.startsWith('Estado pasa de') || notes.includes('Movido en el tablero Kanban');
+  }
+
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'RECIBIDO': return 'bg-info';
+      case 'EN DIAGNÓSTICO': return 'bg-warning';
+      case 'ESPERANDO APROBACIÓN': return 'bg-danger';
+      case 'EN REPARACIÓN': return 'bg-primary';
+      case 'LISTO PARA ENTREGA': return 'bg-success';
+      case 'ENTREGADO': return 'bg-dark';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case 'RECIBIDO': return 'inbox';
+      case 'EN DIAGNÓSTICO': return 'search';
+      case 'ESPERANDO APROBACIÓN': return 'pending_actions';
+      case 'EN REPARACIÓN': return 'engineering';
+      case 'LISTO PARA ENTREGA': return 'local_shipping';
+      case 'ENTREGADO': return 'done_all';
+      default: return 'info';
+    }
+  }
 
   async deliverTicket() {
     const dialogRef = this.matDialog.open(ConfirmDialogComponent, {

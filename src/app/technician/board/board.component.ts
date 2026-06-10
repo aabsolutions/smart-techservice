@@ -25,11 +25,11 @@ export class BoardComponent implements OnInit {
 
   // Columns for the Kanban board
   columns = [
-    { id: 'RECIBIDO', title: 'Recibidos', tickets: [] as any[] },
-    { id: 'EN DIAGNÓSTICO', title: 'En Diagnóstico', tickets: [] as any[] },
-    { id: 'ESPERANDO APROBACIÓN', title: 'Esperando Aprobación', tickets: [] as any[] },
-    { id: 'EN REPARACIÓN', title: 'En Reparación', tickets: [] as any[] },
-    { id: 'LISTO PARA ENTREGA', title: 'Listo para Entrega', tickets: [] as any[] }
+    { id: 'RECIBIDO', title: 'Recibidos', tickets: [] as any[], color: 'bg-info', icon: 'inbox' },
+    { id: 'EN DIAGNÓSTICO', title: 'En Diagnóstico', tickets: [] as any[], color: 'bg-warning', icon: 'search' },
+    { id: 'ESPERANDO APROBACIÓN', title: 'Esperando Aprobación', tickets: [] as any[], color: 'bg-danger', icon: 'pending_actions' },
+    { id: 'EN REPARACIÓN', title: 'En Reparación', tickets: [] as any[], color: 'bg-primary', icon: 'engineering' },
+    { id: 'LISTO PARA ENTREGA', title: 'Listo para Entrega', tickets: [] as any[], color: 'bg-success', icon: 'local_shipping' }
   ];
 
   ngOnInit() {
@@ -63,14 +63,16 @@ export class BoardComponent implements OnInit {
       );
       
       const movedTicket = event.container.data[event.currentIndex];
+      const previousStatus = movedTicket.status;
       movedTicket.status = targetStatus;
       // Update status in backend
-      this.updateTicketStatus(movedTicket._id, targetStatus);
+      this.updateTicketStatus(movedTicket._id, targetStatus, previousStatus);
     }
   }
 
-  updateTicketStatus(ticketId: string, newStatus: string) {
-    this.ticketsService.updateStatus(ticketId, newStatus, 'Movido en el tablero Kanban').subscribe({
+  updateTicketStatus(ticketId: string, newStatus: string, previousStatus?: string) {
+    const note = previousStatus ? `Estado pasa de ${previousStatus} a ${newStatus}` : 'Cambio de estado';
+    this.ticketsService.updateStatus(ticketId, newStatus, note).subscribe({
       next: () => this.swal.success('Estado actualizado', `Movido a "${newStatus}" correctamente.`),
       error: (err) => this.swal.error('Error al actualizar estado', err.error?.message)
     });
