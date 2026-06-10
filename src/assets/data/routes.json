@@ -85,6 +85,30 @@
       "submenu": []
     },
     {
+      "path": "/admin/parts",
+      "title": "Piezas y Partes",
+      "iconType": "material-icons-outlined",
+      "icon": "inventory_2",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
+      "path": "/admin/suppliers",
+      "title": "Proveedores",
+      "iconType": "material-icons-outlined",
+      "icon": "local_shipping",
+      "class": "",
+      "groupTitle": false,
+      "badge": "",
+      "badgeClass": "",
+      "role": ["ADMIN", "SUPERADMIN"],
+      "submenu": []
+    },
+    {
       "path": "",
       "title": "TECHNICIAN",
       "iconType": "",

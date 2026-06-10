@@ -1,0 +1,73 @@
+<section class="content">
+  <div class="content-block">
+    <div class="block-header">
+      <app-breadcrumb [title]="'Inventario de Piezas'" [items]="['Inventario']" [active_item]="'Piezas y Partes'"></app-breadcrumb>
+    </div>
+    <div class="row clearfix">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+          <div class="header flex justify-between items-center">
+            <h2>Listado de Piezas y Partes</h2>
+            <button mat-raised-button color="primary" (click)="openForm()">
+              <mat-icon>add</mat-icon> Nueva Pieza
+            </button>
+          </div>
+          <div class="body">
+            <div class="table-responsive">
+              <table mat-table [dataSource]="parts" class="w-100">
+                
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef> Código </th>
+                  <td mat-cell *matCellDef="let part"> {{ part.code }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                  <td mat-cell *matCellDef="let part"> {{ part.name }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef> Precio Unit. </th>
+                  <td mat-cell *matCellDef="let part"> {{ part.price | currency }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="stock">
+                  <th mat-header-cell *matHeaderCellDef> Stock </th>
+                  <td mat-cell *matCellDef="let part"> {{ part.stock }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Estado </th>
+                  <td mat-cell *matCellDef="let part">
+                    <span class="badge" [ngClass]="part.isActive ? 'bg-success' : 'bg-danger'">
+                      {{ part.isActive ? 'Activo' : 'Inactivo' }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                  <td mat-cell *matCellDef="let part">
+                    <button mat-icon-button color="primary" (click)="openForm(part)" matTooltip="Editar">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="deletePart(part)" matTooltip="Eliminar">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+
+              <div *ngIf="parts.length === 0" class="p-4 text-center text-muted">
+                No hay piezas registradas aún.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
